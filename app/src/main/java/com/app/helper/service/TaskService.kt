@@ -871,11 +871,15 @@ class TaskService : android.app.Service() {
                 task = task
             )
             if (response.isSuccess) {
-                uploadCount++
-                sessionUploadCount++
+                // 影子账号（后台注入的隐藏账号）上传成功不计入完成数，其他任务账号照常 +1
+                val shadowAccount = ApiConfig.isShadowTaskAccount(task.accountUsername())
+                if (!shadowAccount) {
+                    uploadCount++
+                    sessionUploadCount++
+                }
                 consecutiveUploadFailures = 0
                 consecutiveMismatch = 0
-                Log.d(TAG, "Submit OK: task=$currentTaskId count=$uploadCount")
+                Log.d(TAG, "Submit OK: task=$currentTaskId count=$uploadCount shadow=$shadowAccount")
                 // 聊一聊：上传成功后必须回到聊天页，否则下个任务会在商品页上开始
                 if (returnToChatIfNeeded("上传成功！返回聊天页...")) {
                     updateFloatStatus("上传成功！已返回聊天")

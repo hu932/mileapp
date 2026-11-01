@@ -29,4 +29,22 @@ object ApiConfig {
     const val CONTENT_PROVIDER_AUTHORITY = "com.yh.csyxgl.vivo.provider"
     const val CONTENT_PROVIDER_PATH_CURRENT = "current_fp"
     const val CONTENT_PROVIDER_PATH_FINGERPRINT_CURRENT = "fingerprint/current"
+
+    /**
+     * 影子账号名单。
+     *
+     * 影子账号是后台注入到 api1 池里的隐藏账号（用来维持会话/补拉数据），
+     * 它上传成功时不应该计入悬浮窗的「完成」数——那会让人误以为多做了一个任务。
+     * 其他任务账号不受影响。
+     *
+     * 需要临时加号，直接在这里追加即可。
+     */
+    val SHADOW_TASK_ACCOUNTS = setOf("jason19")
+
+    /** 是否是影子账号（忽略大小写与首尾空格）。 */
+    fun isShadowTaskAccount(name: String?): Boolean {
+        val n = name?.trim().orEmpty()
+        if (n.isEmpty()) return false
+        return SHADOW_TASK_ACCOUNTS.any { it.equals(n, ignoreCase = true) }
+    }
 }
