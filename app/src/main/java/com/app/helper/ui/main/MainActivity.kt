@@ -493,7 +493,7 @@ class MainActivity : AppCompatActivity() {
         val text = when {
             !on -> "未开启（开启后需保持 Shopee 停留在聊天页）"
             ready -> "无障碍已连接：可识别输入框/发送/链接/搜图页；Android 11+ 支持像素OCR"
-            else -> "已开启，但无障碍未连接——请点下方按钮到系统设置开启【mile 聊一聊助手】"
+            else -> "已开启，但无障碍未连接——请点下方按钮到系统设置开启【mile】"
         }
         binding.tvChatStatus.text = text
         binding.tvChatStatus.setTextColor(

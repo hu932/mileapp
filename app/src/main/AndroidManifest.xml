@@ -69,7 +69,7 @@
         <service
             android:name=".service.ChatAccessibilityService"
             android:exported="false"
-            android:label="mile 聊一聊助手"
+            android:label="mile"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />

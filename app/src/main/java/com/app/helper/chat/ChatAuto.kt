@@ -95,7 +95,7 @@ object ChatAuto {
     // ---------- 主流程：发链接到聊天并点击 ----------
     suspend fun openTaskLinkInChat(logger: ((String) -> Unit)?, link: String): Boolean {
         if (svc() == null) {
-            log(logger, "聊一聊：无障碍服务未开启，请先在设置里开启AAjie 聊一聊助手】")
+            log(logger, "聊一聊：无障碍服务未开启，请先在系统设置里开启【mile】无障碍服务")
             return false
         }
         if (!svc()!!.isShopeeForeground()) {

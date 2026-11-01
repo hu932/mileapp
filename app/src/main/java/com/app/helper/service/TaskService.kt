@@ -198,7 +198,7 @@ class TaskService : android.app.Service() {
                 prefs.edit().putBoolean("chat_mode", enabled).apply()
                 updateFloatStatus(if (enabled) "已开启聊一聊（需在Shopee聊天页）" else "已关闭聊一聊")
                 if (enabled && !ChatAccessibilityService.isReady()) {
-                    updateFloatStatus("聊一聊需先在系统设置开启无障碍AAjie 聊一聊助手】")
+                    updateFloatStatus("聊一聊需先在系统设置开启无障碍【mile】服务")
                 }
             }
             "SET_SMALL_WINDOW" -> {
@@ -298,7 +298,7 @@ class TaskService : android.app.Service() {
         if (showWelcome) {
             updateFloatStatus(
                 if (small) "小窗：点击开始/停止"
-                else "点击A一键做任务】开始\n延时: ${DelayPrefs.formatMs(DelayPrefs.getMinMs(this))}-${DelayPrefs.formatMs(DelayPrefs.getMaxMs(this))}"
+                else "点击【一键做任务】开始\n延时: ${DelayPrefs.formatMs(DelayPrefs.getMinMs(this))}-${DelayPrefs.formatMs(DelayPrefs.getMaxMs(this))}"
             )
         }
     }
@@ -372,7 +372,7 @@ class TaskService : android.app.Service() {
     private fun recreateFloatWindow() {
         removeFloatWindow()
         createFloatWindow(showWelcome = false)
-        applyStatusToViews(compactStatusMessage.ifEmpty { "点击A一键做任务】开始" })
+        applyStatusToViews(compactStatusMessage.ifEmpty { "点击【一键做任务】开始" })
         // 切换小窗/完整窗口后按钮是新建的，默认文案是「一键做任务」。
         // 如果此时正在跑自动，必须改回「停止自动」，否则用户点了会以为在开始
         // 实际却是停止，状态和文案完全反了。
