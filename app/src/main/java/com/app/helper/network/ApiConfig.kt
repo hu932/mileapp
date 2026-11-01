@@ -18,11 +18,6 @@ object ApiConfig {
     // 代理入口（更新检查 / 指纹上报 / 风控上报等）
     const val DECRYPT_PROXY_URL = "http://189.105.68.250/decrypt_proxy.php"
 
-    // 优惠券预检（自建服务器，与网页插件一致）
-    const val COUPON_PREFLIGHT_BASE_URL = "http://103.146.231.72:1998"
-    const val COUPON_PREFLIGHT_TOKEN = "-CN6_PNYhHpDzN-qJw-RGecT5vOM1nY8zqORenKnFnw"
-    const val COUPON_PREFLIGHT_ACCOUNT_ID = "5064336969"
-
     const val TARGET_PACKAGE = "com.shopee.tw"
     const val WAKE_ACTION = "com.oppo.wake.launch.action"
 
