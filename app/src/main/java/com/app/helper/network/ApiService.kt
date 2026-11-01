@@ -66,6 +66,11 @@ object ApiService {
                     .build()
                 val response = proxyClient.newCall(request).execute()
                 val json = response.body?.string() ?: throw Exception("登录失败：空响应")
+                // 地址配错时会拿到后台面板的 HTML，这里给个能看懂的提示，而不是 Gson 的 DOCTYPE 异常
+                val head = json.trimStart()
+                if (!head.startsWith("{") && !head.startsWith("[")) {
+                    throw Exception("登录失败：服务器返回的不是接口数据（HTTP ${response.code}），请检查后台地址")
+                }
                 val obj = JSONObject(json)
                 if (!obj.optBoolean("success", false)) {
                     throw Exception(obj.optString("error", obj.optString("msg", "登录失败")))
