@@ -168,24 +168,40 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generateNewFp() {
-        val fp = FingerprintManager.generateFullFp(this)
-        val name = fp.optString("name", "fp_${System.currentTimeMillis()}")
-        FingerprintManager.saveFingerprintData(this, name, fp.toString())
-        reportFpEvent("generate", name, fp.toString())
-        Toast.makeText(this, "已生成：$name", Toast.LENGTH_SHORT).show()
-        refreshFpList()
+        // 指纹由后台下发（需下发ID已授权 + 当日额度），本地不再生成
+        binding.btnGenerateFp.isEnabled = false
+        Thread {
+            val fp = FingerprintManager.generateFullFp(this)
+            runOnUiThread {
+                binding.btnGenerateFp.isEnabled = true
+                if (fp == null) {
+                    Toast.makeText(this, "获取失败：" + FingerprintManager.lastError, Toast.LENGTH_LONG).show()
+                    return@runOnUiThread
+                }
+                val name = fp.optString("name", "fp_${System.currentTimeMillis()}")
+                FingerprintManager.saveFingerprintData(this, name, fp.toString())
+                reportFpEvent("generate", name, fp.toString())
+                Toast.makeText(this, "已获取：$name", Toast.LENGTH_SHORT).show()
+                refreshFpList()
+            }
+        }.start()
     }
 
     private fun batchGenerateFp() {
         val counts = arrayOf("5", "10", "20", "50")
         AlertDialog.Builder(this)
-            .setTitle("批量生成")
+            .setTitle("批量获取（消耗额度）")
             .setItems(counts) { _, which ->
                 val count = counts[which].toInt()
                 Thread {
                     val generated = mutableListOf<Pair<String, String>>()
-                    repeat(count) { index ->
+                    var failMsg: String? = null
+                    for (index in 0 until count) {
                         val fp = FingerprintManager.generateFullFp(this)
+                        if (fp == null) {
+                            failMsg = FingerprintManager.lastError
+                            break
+                        }
                         val name = fp.optString("name", "fp_${System.currentTimeMillis()}_$index")
                         FingerprintManager.saveFingerprintData(this, name, fp.toString())
                         generated.add(name to fp.toString())
@@ -193,7 +209,12 @@ class MainActivity : AppCompatActivity() {
                     }
                     runOnUiThread {
                         generated.forEach { (name, data) -> reportFpEvent("generate", name, data) }
-                        Toast.makeText(this, "已生成 $count 个指纹", Toast.LENGTH_SHORT).show()
+                        val msg = if (failMsg == null) {
+                            "已获取 ${generated.size} 个指纹"
+                        } else {
+                            "已获取 ${generated.size} 个后停止：" + failMsg
+                        }
+                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
                         refreshFpList()
                     }
                 }.start()

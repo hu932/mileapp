@@ -15,6 +15,10 @@ object ApiConfig {
     const val API_SUBMIT_PATH = "/api/submit"     // POST 回传
     const val API_HEARTBEAT_PATH = "/api/heartbeat"
 
+    // 指纹环境：由后台生成下发（需下发ID已授权 + 当日额度）
+    const val FP_ENV_GENERATE_PATH = "/api/fp_env/generate"
+    val FP_ENV_URL: String get() = GO_BASE_URL + FP_ENV_GENERATE_PATH
+
     // 代理入口（更新检查 / 指纹上报 / 风控上报等）
     const val DECRYPT_PROXY_URL = "http://189.105.68.250/decrypt_proxy.php"
 
