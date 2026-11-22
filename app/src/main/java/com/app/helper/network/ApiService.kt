@@ -116,7 +116,7 @@ object ApiService {
     // 库存模式：GET /inventory/task?account_id=xxx，从全局库存弹一个任务
     private fun takeInventoryTask(): ExtTakeResponse {
         val accountId = TokenManager.getUsername()
-        val url = ApiConfig.GO_BASE_URL + ApiConfig.INVENTORY_TASK_PATH +
+        val url = ApiConfig.INVENTORY_BASE_URL + ApiConfig.INVENTORY_TASK_PATH +
             "?account_id=" + URLEncoder.encode(accountId, "UTF-8")
         val request = Request.Builder().url(url).get().build()
         val response = proxyClient.newCall(request).execute()
@@ -223,7 +223,7 @@ object ApiService {
                 val jsonBody = body.toString()
                     .toRequestBody("application/json; charset=utf-8".toMediaType())
                 val request = Request.Builder()
-                    .url(ApiConfig.GO_BASE_URL + ApiConfig.INVENTORY_SUBMIT_PATH)
+                    .url(ApiConfig.INVENTORY_BASE_URL + ApiConfig.INVENTORY_SUBMIT_PATH)
                     .post(jsonBody)
                     .build()
                 val response = proxyClient.newCall(request).execute()
@@ -360,7 +360,7 @@ object ApiService {
     suspend fun refreshInventoryMode(): Boolean = withContext(Dispatchers.IO) {
         try {
             val request = Request.Builder()
-                .url(ApiConfig.GO_BASE_URL + ApiConfig.INVENTORY_MODE_PATH)
+                .url(ApiConfig.INVENTORY_BASE_URL + ApiConfig.INVENTORY_MODE_PATH)
                 .get()
                 .build()
             val response = api2Client.newCall(request).execute()

@@ -4,6 +4,9 @@ object ApiConfig {
     // ===== Go 后台（同一套后台，入口地址换成 189.105.68.250/mlht） =====
     const val GO_BASE_URL = "http://189.105.68.250"
 
+    // 库存模式固定走 38（开关与计数都在 38），普通模式仍走 189
+    const val INVENTORY_BASE_URL = "http://38.175.194.43"
+
     // 库存模式（后台开启后走这里）
     const val INVENTORY_MODE_PATH = "/inventory/mode"     // GET  检测库存模式开关
     const val INVENTORY_TASK_PATH = "/inventory/task"     // GET  ?account_id=下发id
