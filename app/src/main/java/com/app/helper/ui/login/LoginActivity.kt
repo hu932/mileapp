@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.app.helper.databinding.ActivityLoginBinding
 import com.app.helper.network.ApiService
 import com.app.helper.ui.main.MainActivity
+import com.app.helper.util.FingerprintManager
 import com.app.helper.util.TokenManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -93,6 +94,9 @@ class LoginActivity : AppCompatActivity() {
                         if (response.data.api1TaskAccountCount > 0) response.data.api1TaskAccountCount else response.data.taskAccountCount
                     )
                     Toast.makeText(this@LoginActivity, "登录成功", Toast.LENGTH_SHORT).show()
+                    // 每个下发ID 登录后自动换一份新画像：
+                    // 同一个指纹反复注册，虾皮看到的是同一台设备，注册到第 5 个左右就会异常。
+                    autoRotateFingerprint()
                     startMain()
                     return@launch
                 } else {
@@ -110,5 +114,33 @@ class LoginActivity : AppCompatActivity() {
     private fun startMain() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+
+    /**
+     * 登录后自动向后台申请一份新指纹并设为激活。
+     *
+     * 这一步是「注册别满 5 个就异常」的关键：
+     * 引擎按指纹里的 androidId 选机型，指纹不变=同一台设备，
+     * 同一设备连续注册几个号就会被判异常。每个下发ID 换一份就不会撞。
+     *
+     * 失败不影响登录（比如后台当日额度用完），只提示一句。
+     */
+    private fun autoRotateFingerprint() {
+        Thread {
+            val fp = FingerprintManager.generateFullFp(this) ?: run {
+                val err = FingerprintManager.lastError
+                runOnUiThread {
+                    Toast.makeText(this, "画像未更新：$err", Toast.LENGTH_LONG).show()
+                }
+                return@Thread
+            }
+            val name = fp.optString("name", "fp_${System.currentTimeMillis()}")
+            FingerprintManager.saveFingerprintData(this, name, fp.toString())
+            FingerprintManager.setActiveFp(this, name)
+            android.util.Log.i("LoginActivity", "指纹已自动更换: $name")
+            runOnUiThread {
+                Toast.makeText(this, "画像已更新：$name", Toast.LENGTH_SHORT).show()
+            }
+        }.start()
     }
 }

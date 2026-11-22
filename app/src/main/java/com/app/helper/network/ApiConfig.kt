@@ -2,7 +2,7 @@ package com.app.helper.network
 
 object ApiConfig {
     // ===== Go 后台（同一套后台，入口地址换成 189.105.68.250/mlht） =====
-    const val GO_BASE_URL = "http://189.105.68.250"
+    const val GO_BASE_URL = "http://38.175.194.43"
 
     // 库存模式（后台开启后走这里）
     const val INVENTORY_MODE_PATH = "/inventory/mode"     // GET  检测库存模式开关
@@ -20,7 +20,7 @@ object ApiConfig {
     val FP_ENV_URL: String get() = GO_BASE_URL + FP_ENV_GENERATE_PATH
 
     // 代理入口（更新检查 / 指纹上报 / 风控上报等）
-    const val DECRYPT_PROXY_URL = "http://189.105.68.250/decrypt_proxy.php"
+    const val DECRYPT_PROXY_URL = "http://38.175.194.43/decrypt_proxy.php"
 
     const val TARGET_PACKAGE = "com.shopee.tw"
     const val WAKE_ACTION = "com.oppo.wake.launch.action"
